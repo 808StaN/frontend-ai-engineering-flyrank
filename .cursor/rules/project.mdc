@@ -1,0 +1,44 @@
+---
+description: Tech stack and conventions for Frontend AI Engineering - FlyRank
+alwaysApply: true
+---
+
+# Frontend AI Engineering - FlyRank
+
+## Project Context
+
+Capstone repository for the FlyRank **Frontend AI Engineering** track. Development is AI-assisted using **Cursor** as the primary IDE.
+
+## Tech Stack
+
+- **Language:** TypeScript (preferred for new code)
+- **Runtime:** Node.js LTS
+- **Package manager:** npm
+- **Version control:** Git with [Conventional Commits](https://www.conventionalcommits.org/)
+- **IDE:** Cursor with project rules in `.cursor/rules/`
+
+## Conventions
+
+### Commits
+
+Use Conventional Commits format:
+
+- `feat:` — new feature
+- `fix:` — bug fix
+- `docs:` — documentation only
+- `chore:` — maintenance, tooling, config
+- `refactor:` — code change without feature/fix
+- `test:` — adding or updating tests
+
+### Code Style
+
+- Prefer clear, self-documenting code over excessive comments
+- Match existing patterns in the codebase
+- Keep changes focused and minimal in scope
+- Use meaningful variable and function names
+
+### AI-Assisted Workflow
+
+- Use Cursor Agent for implementation tasks
+- Review AI-generated code before committing
+- Keep rules files up to date as the stack evolves
