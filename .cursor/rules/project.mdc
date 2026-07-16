@@ -42,3 +42,22 @@ Use Conventional Commits format:
 - Use Cursor Agent for implementation tasks
 - Review AI-generated code before committing
 - Keep rules files up to date as the stack evolves
+- For non-trivial features, start in Plan mode with file paths, constraints, and a verification step before coding
+
+### Forms
+
+- Use `react-hook-form` + `zod` + `@hookform/resolvers` for all new forms
+- Put validation schemas in `src/schemas/` and infer TypeScript types with `z.infer`
+- Trim string inputs in the schema (`.trim()`) before length or format checks
+
+### Accessibility
+
+- Every form control must have a visible `<label htmlFor="...">` linked to a unique `id`
+- Surface field errors with `aria-invalid="true"` and `aria-describedby` pointing to the error element
+- Never use `alert()` for form success — use an `aria-live` region instead
+
+### Testing
+
+- New interactive components require Vitest + Testing Library tests before merge
+- Cover at least: empty/invalid submit, one happy path, and one edge case (e.g. whitespace trimming)
+- Run `npm run test` and `npm run build` before pushing feature branches
