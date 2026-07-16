@@ -8,8 +8,6 @@ This project explores AI-assisted frontend development workflows using modern to
 
 ## Prerequisites
 
-Before you begin, ensure you have installed:
-
 | Tool | Version | Purpose |
 |------|---------|---------|
 | [Node.js](https://nodejs.org/) | LTS (v22+) | JavaScript runtime |
@@ -18,8 +16,9 @@ Before you begin, ensure you have installed:
 
 ## Tech Stack
 
+- **Framework:** React 19 + TypeScript
+- **Build tool:** Vite
 - **Runtime:** Node.js (LTS)
-- **Language:** TypeScript (preferred)
 - **Version control:** Git + GitHub
 - **IDE:** Cursor with project rules in `.cursor/rules/`
 - **Commit style:** [Conventional Commits](https://www.conventionalcommits.org/)
@@ -29,7 +28,18 @@ Before you begin, ensure you have installed:
 ```bash
 git clone https://github.com/808StaN/frontend-ai-engineering-flyrank.git
 cd frontend-ai-engineering-flyrank
+npm install
+npm run dev
 ```
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Type-check and build for production |
+| `npm run preview` | Preview production build |
+| `npm run lint` | Run Oxlint |
 
 ## Project Structure
 
@@ -37,8 +47,13 @@ cd frontend-ai-engineering-flyrank
 frontend-ai-engineering-flyrank/
 ├── .cursor/
 │   └── rules/          # Cursor AI rules (tech stack & conventions)
-├── .gitignore
-├── LICENSE
+├── public/
+├── src/
+│   ├── App.tsx
+│   └── main.tsx
+├── package.json
+├── vite.config.ts
+├── WORKFLOW.md         # FE-03 AI workflow comparison (on main)
 └── README.md
 ```
 
