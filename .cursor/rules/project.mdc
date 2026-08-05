@@ -11,7 +11,9 @@ Capstone repository for the FlyRank **Frontend AI Engineering** track. Developme
 
 ## Tech Stack
 
-- **Language:** TypeScript (preferred for new code)
+- **Framework:** Next.js 15 App Router + React 19 + TypeScript
+- **Styling:** Tailwind CSS v4 with design tokens in `app/globals.css`
+- **Deployment:** Vercel preview deployments on every push
 - **Runtime:** Node.js LTS
 - **Package manager:** npm
 - **Version control:** Git with [Conventional Commits](https://www.conventionalcommits.org/)
@@ -30,24 +32,23 @@ Use Conventional Commits format:
 - `refactor:` — code change without feature/fix
 - `test:` — adding or updating tests
 
-### Code Style
+### Next.js App Router
 
-- Prefer clear, self-documenting code over excessive comments
-- Match existing patterns in the codebase
-- Keep changes focused and minimal in scope
-- Use meaningful variable and function names
+- Default to **Server Components** in `app/` routes and shared layout
+- Add `'use client'` only for interactivity (menus, forms, browser APIs)
+- Put server-side data fetching in Server Components or `lib/` utilities
+- Use `process.env` for configuration; document vars in `.env.example`
 
-### AI-Assisted Workflow
+### Styling
 
-- Use Cursor Agent for implementation tasks
-- Review AI-generated code before committing
-- Keep rules files up to date as the stack evolves
-- For non-trivial features, start in Plan mode with file paths, constraints, and a verification step before coding
+- Use Tailwind utility classes and tokens from `app/globals.css`
+- Design for **375px** (mobile) and **1280px** (desktop) breakpoints
+- Prefer semantic layout classes (`max-w-6xl`, `grid`, `gap-4`) over fixed pixel widths
 
 ### Forms
 
 - Use `react-hook-form` + `zod` + `@hookform/resolvers` for all new forms
-- Put validation schemas in `src/schemas/` and infer TypeScript types with `z.infer`
+- Put validation schemas in `lib/schemas/` and infer TypeScript types with `z.infer`
 - Trim string inputs in the schema (`.trim()`) before length or format checks
 
 ### Accessibility
@@ -56,8 +57,10 @@ Use Conventional Commits format:
 - Surface field errors with `aria-invalid="true"` and `aria-describedby` pointing to the error element
 - Never use `alert()` for form success — use an `aria-live` region instead
 
-### Testing
+### AI-Assisted Workflow
 
-- New interactive components require Vitest + Testing Library tests before merge
-- Cover at least: empty/invalid submit, one happy path, and one edge case (e.g. whitespace trimming)
-- Run `npm run test` and `npm run build` before pushing feature branches
+- Use Cursor Agent for implementation tasks
+- For non-trivial features, start in Plan mode with file paths, constraints, and a verification step before coding
+- Review AI-generated code before committing
+- Keep rules files up to date as the stack evolves
+- Run `npm run lint` and `npm run build` before pushing feature branches
