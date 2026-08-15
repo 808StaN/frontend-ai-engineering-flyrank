@@ -1,4 +1,5 @@
 import { ModalDialog } from './components/ModalDialog'
+import { Tabs } from './components/Tabs'
 
 export default function App() {
   return (
@@ -30,6 +31,40 @@ export default function App() {
             after closing the dialog.
           </p>
         </ModalDialog>
+      </section>
+
+      <section className="fe05-section" aria-labelledby="tabs-heading">
+        <h2 id="tabs-heading">Tabs</h2>
+        <p className="fe05-hint">
+          Keyboard: Tab enters the selected tab. ArrowLeft / ArrowRight move
+          and automatically activate. Home and End jump to the first and last
+          tab.
+        </p>
+        <Tabs
+          label="Capstone topics"
+          items={[
+            {
+              id: 'overview',
+              label: 'Overview',
+              panel: <p>Automatic activation: focusing a tab also selects it.</p>,
+            },
+            {
+              id: 'a11y',
+              label: 'Accessibility',
+              panel: (
+                <p>
+                  Only the selected tab is in the tab order. Other tabs use
+                  tabIndex=-1.
+                </p>
+              ),
+            },
+            {
+              id: 'next',
+              label: 'Next steps',
+              panel: <p>Compare this widget with the shadcn Tabs below.</p>,
+            },
+          ]}
+        />
       </section>
     </main>
   )

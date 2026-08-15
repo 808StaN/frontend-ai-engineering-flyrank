@@ -55,9 +55,13 @@ body {
   font-size: 0.95rem;
 }
 
-.fe05-button {
+.fe05-button,
+.fe05-tabs__tab {
   font: inherit;
   cursor: pointer;
+}
+
+.fe05-button {
   padding: 0.5rem 0.9rem;
   border: 1px solid #0f766e;
   border-radius: 0.4rem;
@@ -123,4 +127,29 @@ body {
 .fe05-modal__body p {
   margin: 0.75rem 0 0;
   color: #334155;
+}
+
+.fe05-tabs__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.fe05-tabs__tab {
+  padding: 0.5rem 0.85rem;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: #334155;
+}
+
+.fe05-tabs__tab[aria-selected='true'] {
+  border-bottom-color: #0f766e;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.fe05-tabs__panel {
+  padding: 0.9rem 0.1rem 0.1rem;
 }
