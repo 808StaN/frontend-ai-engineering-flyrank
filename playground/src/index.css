@@ -56,6 +56,7 @@ body {
 }
 
 .fe05-button,
+.fe05-disclosure__trigger,
 .fe05-tabs__tab {
   font: inherit;
   cursor: pointer;
@@ -152,4 +153,21 @@ body {
 
 .fe05-tabs__panel {
   padding: 0.9rem 0.1rem 0.1rem;
+}
+
+.fe05-disclosure__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #94a3b8;
+  border-radius: 0.4rem;
+  background: #fff;
+}
+
+.fe05-disclosure__content {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border-left: 3px solid #0f766e;
+  background: #f1f5f9;
 }

@@ -1,3 +1,4 @@
+import { Disclosure } from './components/Disclosure'
 import { ModalDialog } from './components/ModalDialog'
 import { Tabs } from './components/Tabs'
 
@@ -65,6 +66,19 @@ export default function App() {
             },
           ]}
         />
+      </section>
+
+      <section className="fe05-section" aria-labelledby="disclosure-heading">
+        <h2 id="disclosure-heading">Disclosure</h2>
+        <p className="fe05-hint">
+          Keyboard: Tab to the button, then Enter or Space toggles the content.
+        </p>
+        <Disclosure title="Why use a real button?">
+          <p>
+            Native buttons already handle Enter and Space, so this disclosure
+            does not attach click handlers to a div.
+          </p>
+        </Disclosure>
       </section>
     </main>
   )
