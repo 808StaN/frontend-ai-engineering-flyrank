@@ -1,6 +1,8 @@
 import { Disclosure } from './components/Disclosure'
 import { ModalDialog } from './components/ModalDialog'
 import { Tabs } from './components/Tabs'
+import { ShadcnDialogDemo } from './components/shadcn/ShadcnDialogDemo'
+import { ShadcnTabsDemo } from './components/shadcn/ShadcnTabsDemo'
 
 export default function App() {
   return (
@@ -79,6 +81,18 @@ export default function App() {
             does not attach click handlers to a div.
           </p>
         </Disclosure>
+      </section>
+
+      <section className="fe05-section" aria-labelledby="shadcn-heading">
+        <h2 id="shadcn-heading">shadcn/ui comparison</h2>
+        <p className="fe05-hint">
+          Generated Dialog and Tabs from shadcn/ui. Custom components above
+          stay dependency-free.
+        </p>
+        <ShadcnDialogDemo />
+        <div className="fe05-compare">
+          <ShadcnTabsDemo />
+        </div>
       </section>
     </main>
   )
