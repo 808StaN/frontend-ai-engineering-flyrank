@@ -82,3 +82,45 @@ body {
   border: 1px solid #94a3b8;
   border-radius: 0.35rem;
 }
+
+.fe05-modal-root {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.fe05-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(15 23 42 / 55%);
+}
+
+.fe05-modal {
+  position: relative;
+  z-index: 1;
+  width: min(32rem, 100%);
+  padding: 1rem 1.1rem 1.15rem;
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 0 16px 40px rgb(15 23 42 / 25%);
+}
+
+.fe05-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.fe05-modal__title {
+  margin: 0;
+}
+
+.fe05-modal__description,
+.fe05-modal__body p {
+  margin: 0.75rem 0 0;
+  color: #334155;
+}
