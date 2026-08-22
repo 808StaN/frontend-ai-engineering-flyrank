@@ -60,26 +60,28 @@ export function ChatInterface() {
         </p>
       </header>
 
-      <SmartScrollArea followStream={isGenerating}>
-        <MessageList messages={messages} />
-        <ThinkingIndicator visible={isThinking} />
-      </SmartScrollArea>
+      <div className="chat-conversation">
+        <SmartScrollArea followStream={isGenerating}>
+          <MessageList messages={messages} />
+          <ThinkingIndicator visible={isThinking} />
+        </SmartScrollArea>
 
-      <div className="min-h-6" aria-live="polite">
-        {error && (
-          <p className="chat-error" role="alert">
-            {error.message} You can edit your message and try again.
-          </p>
-        )}
+        <div aria-live="polite">
+          {error && (
+            <p className="chat-error" role="alert">
+              {error.message} You can edit your message and try again.
+            </p>
+          )}
+        </div>
+
+        <ChatComposer
+          input={input}
+          status={status}
+          onInputChange={setInput}
+          onSend={sendCurrentMessage}
+          onStop={stopGeneration}
+        />
       </div>
-
-      <ChatComposer
-        input={input}
-        status={status}
-        onInputChange={setInput}
-        onSend={sendCurrentMessage}
-        onStop={stopGeneration}
-      />
     </section>
   )
 }

@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useRef,
   type FormEvent,
   type KeyboardEvent,
@@ -21,6 +22,17 @@ export function ChatComposer({
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const isGenerating = status === 'submitted' || status === 'streaming'
+
+  useEffect(() => {
+    const textarea = textareaRef.current
+
+    if (!textarea) {
+      return
+    }
+
+    textarea.style.height = 'auto'
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`
+  }, [input])
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -46,23 +58,30 @@ export function ChatComposer({
         placeholder="Ask about your capstone…"
         value={input}
         disabled={isGenerating}
-        rows={3}
+        rows={1}
         onChange={(event) => onInputChange(event.currentTarget.value)}
         onKeyDown={handleKeyDown}
       />
       <div className="chat-composer__actions">
-        <p className="text-xs text-muted">Enter to send · Shift + Enter for a new line</p>
         {isGenerating ? (
-          <button type="button" className="chat-stop-button" onClick={onStop}>
-            Stop generating
+          <button
+            type="button"
+            className="chat-stop-button"
+            aria-label="Stop generating"
+            title="Stop generating"
+            onClick={onStop}
+          >
+            <span aria-hidden="true">■</span>
           </button>
         ) : (
           <button
             type="submit"
             className="chat-send-button"
+            aria-label="Send message"
+            title="Send message"
             disabled={input.trim().length === 0}
           >
-            Send message
+            <span aria-hidden="true">↑</span>
           </button>
         )}
       </div>
