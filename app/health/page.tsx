@@ -9,13 +9,13 @@ export default async function HealthPage() {
       title="Health check"
       description="Server-rendered status page that fetches data from a public API on each request."
     >
-      <article className="rounded-lg border border-border bg-surface p-4 shadow-sm sm:col-span-2 sm:p-5 xl:col-span-3">
+      <article className="glass-card p-4 sm:col-span-2 sm:p-5 xl:col-span-3">
         <div className="flex flex-wrap items-center gap-3">
           <span
             className={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${
               result.ok
-                ? 'bg-emerald-100 text-success'
-                : 'bg-red-100 text-danger'
+                ? 'border border-success/30 bg-success/10 text-success'
+                : 'border border-danger/30 bg-danger/10 text-danger'
             }`}
           >
             {result.ok ? 'Healthy' : 'Unhealthy'}
@@ -37,7 +37,7 @@ export default async function HealthPage() {
         </dl>
 
         {result.error && (
-          <p className="mt-4 rounded-md bg-red-50 p-3 text-sm text-danger" role="alert">
+          <p className="mt-4 rounded-md border border-danger/30 bg-danger/10 p-3 text-sm text-danger" role="alert">
             {result.error}
           </p>
         )}

@@ -35,7 +35,7 @@ type PlaceholderCardProps = {
 
 export function PlaceholderCard({ title, body }: PlaceholderCardProps) {
   return (
-    <article className="rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5">
+    <article className="glass-card p-4 sm:p-5">
       <h2 className="text-lg font-semibold text-foreground">{title}</h2>
       <p className="mt-2 text-sm text-muted sm:text-base">{body}</p>
     </article>

@@ -18,6 +18,7 @@ This project explores AI-assisted frontend development workflows using modern to
 
 - **Framework:** Next.js 15 (App Router) + React 19 + TypeScript
 - **Styling:** Tailwind CSS v4 with design tokens in `app/globals.css`
+- **AI streaming:** Vercel AI SDK + OpenRouter Free Router
 - **Deployment:** Vercel preview deployments on every push
 - **Version control:** Git + GitHub
 - **IDE:** Cursor with project rules in `.cursor/rules/`
@@ -49,6 +50,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | Route | Screen |
 |-------|--------|
 | `/` | Dashboard |
+| `/chat` | Streaming FlyRank Capstone Advisor |
 | `/projects` | Projects list |
 | `/projects/[projectId]` | Project detail |
 | `/settings` | Settings placeholder |
@@ -60,15 +62,26 @@ Copy `.env.example` to `.env.local` for local development:
 
 ```bash
 HEALTH_CHECK_API_URL=https://jsonplaceholder.typicode.com/posts/1
+OPENROUTER_API_KEY=your_openrouter_server_key
 ```
 
-Set the same variable in the Vercel project dashboard for preview and production deployments. Never commit secrets to the repository.
+`OPENROUTER_API_KEY` is server-side only and must never use a `NEXT_PUBLIC_`
+prefix. Create it in the [OpenRouter keys dashboard](https://openrouter.ai/keys),
+add it to `.env.local`, and set it in Vercel for preview and production
+deployments. Never commit secrets to the repository.
+
+## Streaming AI chat
+
+The `/chat` route streams a multi-turn conversation through `app/api/chat/route.ts`.
+The route uses the Vercel AI SDK and `openrouter/free`, while
+`lib/ai/config.ts` centralizes the system prompt, model choice, and generation
+configuration. The browser never receives the OpenRouter key.
 
 ## Deployment (Vercel)
 
 1. Import the GitHub repository in [Vercel](https://vercel.com/).
 2. Framework preset: **Next.js**
-3. Add `HEALTH_CHECK_API_URL` in Project Settings → Environment Variables
+3. Add `HEALTH_CHECK_API_URL` and `OPENROUTER_API_KEY` in Project Settings → Environment Variables
 4. Every push creates a preview deployment; merges to `main` update production
 
 ## Project Structure

@@ -64,3 +64,11 @@ Use Conventional Commits format:
 - Review AI-generated code before committing
 - Keep rules files up to date as the stack evolves
 - Run `npm run lint` and `npm run build` before pushing feature branches
+
+### Streaming AI
+
+- Keep provider choice, model ID, system prompt, and generation settings in `lib/ai/config.ts`
+- Keep provider API keys server-side only; never expose `OPENROUTER_API_KEY` through a `NEXT_PUBLIC_` variable or client component
+- Render AI SDK `UIMessage.parts` by type and treat incomplete streamed text as plain text instead of raw markdown
+- Streaming chat must retain a partial response after Stop and permit the next message immediately
+- Auto-scroll only while the reader is near the bottom; provide a keyboard-accessible control to jump to the latest message
