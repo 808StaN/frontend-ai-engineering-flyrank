@@ -149,6 +149,71 @@
   .chat-error {
     @apply rounded-md bg-red-50 p-3 text-sm text-danger;
   }
+
+  .chat-page-shell {
+    @apply relative -mx-4 -my-6 min-h-[calc(100dvh-5rem)] px-4 py-6 text-violet-50 sm:-mx-6 sm:-my-8 sm:px-6 sm:py-8 lg:-mx-8 lg:px-8;
+  }
+
+  .chat-page-shell__content {
+    @apply relative z-10;
+  }
+
+  .chat-page-shell .chat-interface__header {
+    @apply border-white/10 bg-white/5 backdrop-blur-sm;
+  }
+
+  .chat-page-shell .text-foreground,
+  .chat-page-shell .chat-message--assistant .chat-message__bubble {
+    @apply text-violet-50;
+  }
+
+  .chat-page-shell .text-muted {
+    @apply text-violet-200/75;
+  }
+
+  .chat-page-shell .text-accent {
+    @apply text-violet-300;
+  }
+
+  .chat-page-shell .chat-empty-state {
+    @apply border-violet-400/20 bg-violet-400/5;
+  }
+
+  .chat-page-shell .chat-message--user .chat-message__bubble {
+    @apply bg-violet-600;
+  }
+
+  .chat-page-shell .chat-message--assistant .chat-message__bubble {
+    @apply border-white/10 bg-white/10 backdrop-blur-sm;
+  }
+
+  .chat-page-shell .chat-thinking {
+    @apply bg-white/10 text-violet-100;
+  }
+
+  .chat-page-shell .chat-thinking__dots i {
+    @apply bg-violet-300;
+  }
+
+  .chat-page-shell .chat-composer {
+    @apply border-white/10 bg-[#1a1229]/85 shadow-lg shadow-violet-950/30 backdrop-blur-md;
+  }
+
+  .chat-page-shell .chat-composer__textarea {
+    @apply text-violet-50 placeholder:text-violet-200/60;
+  }
+
+  .chat-page-shell .chat-composer__textarea:focus {
+    @apply ring-0;
+  }
+
+  .chat-page-shell .chat-send-button {
+    @apply bg-violet-500;
+  }
+
+  .chat-page-shell .chat-jump-button {
+    @apply bg-violet-100 text-violet-950;
+  }
 }
 
 @keyframes chat-pulse {
