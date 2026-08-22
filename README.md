@@ -77,6 +77,23 @@ The route uses the Vercel AI SDK and `openrouter/free`, while
 `lib/ai/config.ts` centralizes the system prompt, model choice, and generation
 configuration. The browser never receives the OpenRouter key.
 
+### Capstone review tool
+
+The `reviewCapstonePlan` server-side AI SDK tool evaluates a submitted
+capstone plan and returns structured UI data rather than a JSON dump.
+
+- **Input schema:** `title` (string), `description` (20–1500 characters),
+  `stack` (1–8 technology names), and `stage`
+  (`idea`, `planning`, `building`, `testing`, or `reviewing`).
+- **Return shape:** `score` (0–100), `verdict`, `strengths`, `risks`, and
+  `nextSteps`.
+- **UI states:** the chat renders streamed tool input, ready input, structured
+  output, and an execution error as separate accessible visual states.
+
+Ask the chat to “review my capstone plan” and include those four input fields
+to trigger the tool. To demonstrate its designed failure state, use
+`[tool-error]` in the supplied plan title.
+
 ## Deployment (Vercel)
 
 1. Import the GitHub repository in [Vercel](https://vercel.com/).
