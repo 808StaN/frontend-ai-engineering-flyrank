@@ -185,6 +185,55 @@
     @apply rounded-md border border-danger/30 bg-danger/10 p-3 text-sm text-danger;
   }
 
+  .tool-review {
+    @apply mt-3 p-4;
+  }
+
+  .tool-review--pending {
+    @apply flex items-center gap-2 text-sm text-muted;
+  }
+
+  .tool-review--error {
+    @apply border-danger/30 bg-danger/10 text-sm text-danger;
+  }
+
+  .tool-review__pulse {
+    @apply size-2 rounded-full bg-accent;
+    animation: chat-pulse 1s ease-in-out infinite;
+  }
+
+  .tool-review__summary {
+    @apply flex items-start justify-between gap-4;
+  }
+
+  .tool-review__eyebrow {
+    @apply m-0 text-xs font-semibold uppercase tracking-wide text-accent;
+  }
+
+  .tool-review h3 {
+    @apply mt-1 text-base font-semibold text-foreground sm:text-lg;
+  }
+
+  .tool-review__score {
+    @apply m-0 shrink-0 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-lg font-semibold text-accent;
+  }
+
+  .tool-review__score span {
+    @apply text-xs text-muted;
+  }
+
+  .tool-review__sections {
+    @apply mt-4 grid gap-4 sm:grid-cols-3;
+  }
+
+  .tool-review__section h4 {
+    @apply m-0 text-sm font-semibold text-foreground;
+  }
+
+  .tool-review__section ul {
+    @apply mt-2 list-disc space-y-1 pl-4 text-sm text-muted;
+  }
+
   .chat-page-shell {
     @apply relative -mx-4 -my-6 min-h-[calc(100dvh-5rem)] px-4 py-6 text-foreground sm:-mx-6 sm:-my-8 sm:px-6 sm:py-8 lg:-mx-8 lg:px-8;
   }
