@@ -4,7 +4,7 @@ import { MobileNavToggle } from '@/components/MobileNavToggle'
 
 export function SiteNav() {
   return (
-    <header className="border-b border-border bg-surface">
+    <header className="relative z-20 border-b border-white/10 bg-background/90 backdrop-blur-md">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <div className="min-w-0">
           <Link
@@ -25,7 +25,7 @@ export function SiteNav() {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-md px-3 py-2 text-sm font-medium text-foreground no-underline hover:bg-surface-muted hover:no-underline"
+              className="rounded-md px-3 py-2 text-sm font-medium text-foreground no-underline hover:bg-white/10 hover:no-underline"
             >
               {item.label}
             </Link>

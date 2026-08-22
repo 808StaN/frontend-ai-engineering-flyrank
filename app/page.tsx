@@ -19,7 +19,7 @@ export default function DashboardPage() {
         title="AI workflow"
         body="Use Cursor rules and plan-first prompts to keep implementation consistent."
       />
-      <article className="rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5">
+      <article className="glass-card p-4 sm:p-5">
         <h2 className="text-lg font-semibold text-foreground">Capstone Advisor</h2>
         <p className="mt-2 text-sm text-muted sm:text-base">
           Hold a streaming conversation with the AI assistant about your next

@@ -28,7 +28,7 @@ export default function ProjectsPage() {
       {projects.map((project) => (
         <article
           key={project.id}
-          className="rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5"
+          className="glass-card p-4 sm:p-5"
         >
           <h2 className="text-lg font-semibold text-foreground">{project.name}</h2>
           <p className="mt-2 text-sm text-muted sm:text-base">{project.summary}</p>
