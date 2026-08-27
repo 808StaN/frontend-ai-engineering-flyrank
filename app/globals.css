@@ -68,7 +68,7 @@
   }
 
   .chat-interface {
-    @apply mx-auto grid h-[calc(100dvh-8.5rem)] min-h-[32rem] w-full max-w-4xl grid-rows-[auto_minmax(0,1fr)] rounded-3xl border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/30 backdrop-blur-md sm:p-6;
+    @apply mx-auto grid h-[calc(100dvh-6rem)] min-h-0 w-full max-w-4xl grid-rows-[auto_minmax(0,1fr)] rounded-3xl border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/30 backdrop-blur-md sm:h-[calc(100dvh-8.5rem)] sm:min-h-[32rem] sm:p-6;
   }
 
   .chat-interface__header {
@@ -84,7 +84,7 @@
   }
 
   .chat-scroll-area {
-    @apply h-full overflow-y-auto px-3 py-5 sm:px-5;
+    @apply h-full overscroll-contain overflow-y-auto px-3 py-5 sm:px-5;
   }
 
   .chat-message-list {
@@ -127,6 +127,30 @@
     @apply flex h-full min-h-48 flex-col items-center justify-center px-4 text-center;
   }
 
+  .chat-empty-state__example {
+    @apply mt-4 rounded-full border border-accent/50 bg-accent/10 px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+  }
+
+  .chat-response-skeleton {
+    @apply mt-4 w-full max-w-sm space-y-2 rounded-lg border border-border bg-surface-muted p-4;
+  }
+
+  .chat-response-skeleton span:not(.sr-only) {
+    @apply block h-3 animate-pulse rounded-full bg-white/10;
+  }
+
+  .chat-response-skeleton span:nth-child(2) {
+    @apply w-11/12;
+  }
+
+  .chat-response-skeleton span:nth-child(3) {
+    @apply w-8/12;
+  }
+
+  .chat-response-skeleton span:nth-child(4) {
+    @apply w-5/12;
+  }
+
   .chat-thinking {
     @apply mt-4 inline-flex items-center gap-2 rounded-full bg-surface-muted px-3 py-2 text-sm text-muted;
   }
@@ -154,6 +178,7 @@
 
   .chat-composer {
     @apply mx-auto flex w-full max-w-3xl items-end gap-2 rounded-3xl border border-white/15 bg-white/10 p-2 backdrop-blur-md;
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
   }
 
   .chat-composer__textarea {
@@ -182,7 +207,31 @@
   }
 
   .chat-error {
-    @apply rounded-md border border-danger/30 bg-danger/10 p-3 text-sm text-danger;
+    @apply mb-3 flex w-full flex-col gap-3 rounded-md border border-danger/30 bg-danger/10 p-3 text-sm text-danger sm:w-3/4 sm:justify-self-center sm:flex-row sm:items-center sm:justify-between;
+  }
+
+  .chat-error p {
+    @apply m-0;
+  }
+
+  .chat-error__retry {
+    @apply shrink-0 self-start rounded-full border border-danger/50 px-3 py-1.5 text-sm font-medium text-danger transition-colors hover:bg-danger/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger disabled:cursor-wait disabled:opacity-60 sm:self-auto;
+  }
+
+  .chat-route-error {
+    @apply mx-auto flex min-h-80 max-w-xl flex-col items-start justify-center rounded-3xl border border-danger/30 bg-danger/10 p-6 text-foreground shadow-2xl shadow-black/20 backdrop-blur-md;
+  }
+
+  .chat-route-error h1 {
+    @apply mt-2 text-2xl font-semibold;
+  }
+
+  .chat-route-error p:not(.text-accent) {
+    @apply mt-3 text-sm leading-6 text-muted;
+  }
+
+  .chat-route-error button {
+    @apply mt-5 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
   }
 
   .tool-review {

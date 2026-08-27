@@ -94,6 +94,19 @@ Ask the chat to “review my capstone plan” and include those four input field
 to trigger the tool. To demonstrate its designed failure state, use
 `[tool-error]` in the supplied plan title.
 
+### Resilience checks
+
+The chat keeps partial responses available after an interrupted stream and
+provides a retry action for failed requests. Its empty state can prefill an
+example prompt, and a skeleton appears while a response is being prepared.
+
+For local manual verification, send one of these explicit test messages:
+
+- `[[simulate:route-error]]` — returns a designed 503 error before streaming.
+- `[[simulate:rate-limit]]` — returns 429 with a `Retry-After` header.
+- `[[simulate:mid-stream-error]]` — renders partial assistant text, then a
+  designed interrupted-stream error.
+
 ## Deployment (Vercel)
 
 1. Import the GitHub repository in [Vercel](https://vercel.com/).

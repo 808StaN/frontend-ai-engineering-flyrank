@@ -4,28 +4,60 @@ import { DefaultChatTransport } from 'ai'
 import { useChat } from '@ai-sdk/react'
 import { useMemo, useState } from 'react'
 import { ChatComposer } from '@/components/chat/ChatComposer'
+import { ChatErrorNotice } from '@/components/chat/ChatErrorNotice'
 import { MessageList } from '@/components/chat/MessageList'
+import { ChatResponseSkeleton } from '@/components/chat/ChatResponseSkeleton'
 import { SmartScrollArea } from '@/components/chat/SmartScrollArea'
 import { ThinkingIndicator } from '@/components/chat/ThinkingIndicator'
+
+const EXAMPLE_MESSAGE =
+  'Help me define the first milestone for an AI-powered study planner.'
+
+function getServerErrorMessage(payload: unknown) {
+  if (
+    typeof payload === 'object' &&
+    payload !== null &&
+    'error' in payload &&
+    typeof payload.error === 'string'
+  ) {
+    return payload.error
+  }
+
+  return 'The chat service is temporarily unavailable. Please try again.'
+}
+
+const chatFetch: typeof fetch = async (...args) => {
+  const response = await fetch(...args)
+
+  if (response.ok) {
+    return response
+  }
+
+  const payload: unknown = await response.json().catch(() => null)
+  throw new Error(getServerErrorMessage(payload))
+}
 
 export function ChatInterface() {
   const [input, setInput] = useState('')
   const transport = useMemo(
-    () => new DefaultChatTransport({ api: '/api/chat' }),
+    () => new DefaultChatTransport({ api: '/api/chat', fetch: chatFetch }),
     [],
   )
-  const { messages, sendMessage, status, stop, error, clearError } = useChat({
-    transport,
-  })
+  const { messages, sendMessage, status, stop, error, clearError, regenerate } =
+    useChat({
+      transport,
+    })
 
   const isGenerating = status === 'submitted' || status === 'streaming'
   const latestMessage = messages.at(-1)
-  const latestAssistantHasText =
+  const latestAssistantHasContent =
     latestMessage?.role === 'assistant' &&
     latestMessage.parts.some(
-      (part) => part.type === 'text' && part.text.length > 0,
+      (part) =>
+        (part.type === 'text' && part.text.length > 0) ||
+        part.type.startsWith('tool-'),
     )
-  const isThinking = isGenerating && !latestAssistantHasText
+  const isThinking = status === 'streaming' && !latestAssistantHasContent
 
   function sendCurrentMessage() {
     const text = input.trim()
@@ -41,6 +73,15 @@ export function ChatInterface() {
 
   function stopGeneration() {
     stop()
+  }
+
+  function retryLastResponse() {
+    if (isGenerating) {
+      return
+    }
+
+    clearError()
+    void regenerate()
   }
 
   return (
@@ -62,17 +103,21 @@ export function ChatInterface() {
 
       <div className="chat-conversation">
         <SmartScrollArea followStream={isGenerating}>
-          <MessageList messages={messages} />
+          <MessageList
+            messages={messages}
+            onUseExample={() => setInput(EXAMPLE_MESSAGE)}
+          />
+          <ChatResponseSkeleton visible={status === 'submitted'} />
           <ThinkingIndicator visible={isThinking} />
         </SmartScrollArea>
 
-        <div aria-live="polite">
-          {error && (
-            <p className="chat-error" role="alert">
-              {error.message} You can edit your message and try again.
-            </p>
-          )}
-        </div>
+        {error && (
+          <ChatErrorNotice
+            error={error}
+            isRetrying={isGenerating}
+            onRetry={retryLastResponse}
+          />
+        )}
 
         <ChatComposer
           input={input}
