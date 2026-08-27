@@ -207,7 +207,7 @@
   }
 
   .chat-error {
-    @apply flex flex-col gap-3 rounded-md border border-danger/30 bg-danger/10 p-3 text-sm text-danger sm:flex-row sm:items-center sm:justify-between;
+    @apply mb-3 flex w-full flex-col gap-3 rounded-md border border-danger/30 bg-danger/10 p-3 text-sm text-danger sm:w-3/4 sm:justify-self-center sm:flex-row sm:items-center sm:justify-between;
   }
 
   .chat-error p {
