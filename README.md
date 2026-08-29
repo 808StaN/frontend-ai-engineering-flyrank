@@ -107,6 +107,21 @@ For local manual verification, send one of these explicit test messages:
 - `[[simulate:mid-stream-error]]` — renders partial assistant text, then a
   designed interrupted-stream error.
 
+## Button state micro-interactions
+
+The `/motion` route demonstrates a state-aware **Send message** button.
+`Trigger success` and `Trigger error` each run a deterministic full lifecycle:
+`idle → loading → success/error → idle`. The button and both triggers lock
+during the sequence, preventing duplicate actions.
+
+Motion is deliberately brief: hover uses 160 ms
+`cubic-bezier(0.2, 0.8, 0.2, 1)`, press 100 ms `ease-out`, loading 220 ms
+`ease-in-out`, success/error 260 ms `cubic-bezier(0.2, 0.8, 0.2, 1)`, and
+reset 180 ms `ease-out`. These timings acknowledge an action immediately,
+make the outcome readable, and then return control without delaying the next
+interaction. The demo honours `prefers-reduced-motion` by retaining state
+labels and colors while disabling animation.
+
 ## Deployment (Vercel)
 
 1. Import the GitHub repository in [Vercel](https://vercel.com/).
