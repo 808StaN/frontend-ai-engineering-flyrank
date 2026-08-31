@@ -44,6 +44,9 @@ Open [http://localhost:3000](http://localhost:3000).
 | `npm run build` | Build for production |
 | `npm run start` | Run production server locally |
 | `npm run lint` | Run ESLint (Next.js) |
+| `npm run test` | Run Vitest component tests |
+| `npm run test:watch` | Run Vitest in watch mode |
+| `npm run test:e2e` | Run the Playwright chat flow after a production build |
 
 ## Routes
 
@@ -106,6 +109,28 @@ For local manual verification, send one of these explicit test messages:
 - `[[simulate:rate-limit]]` — returns 429 with a `Retry-After` header.
 - `[[simulate:mid-stream-error]]` — renders partial assistant text, then a
   designed interrupted-stream error.
+
+## Testing
+
+The test suite covers the chat's accessible composer, streamed capstone-review
+results, retry error notice, and the pending, streaming, and error states of
+the chat interface. Tests locate elements by role, label, and visible text, so
+they do not depend on Tailwind or CSS class names.
+
+The Playwright primary-flow test opens `/chat`, submits a message, and
+intercepts `/api/chat` with a deterministic AI SDK UI-message stream. It never
+contacts OpenRouter or needs `OPENROUTER_API_KEY`. Run the complete local
+verification in this order:
+
+```bash
+npm run lint
+npm run test
+npm run build
+npm run test:e2e
+```
+
+GitHub Actions repeats the same checks on every push and pull request using
+Node.js 22. Playwright reports and test result artefacts are ignored by Git.
 
 ## Button state micro-interactions
 
