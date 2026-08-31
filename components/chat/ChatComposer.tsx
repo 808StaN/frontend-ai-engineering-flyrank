@@ -42,7 +42,10 @@ export function ChatComposer({
   function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault()
-      onSend()
+
+      if (!isGenerating && input.trim()) {
+        onSend()
+      }
     }
   }
 
