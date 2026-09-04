@@ -32,6 +32,19 @@ export default function DashboardPage() {
           Open AI chat
         </Link>
       </article>
+      <article className="glass-card p-4 sm:p-5">
+        <h2 className="text-lg font-semibold text-foreground">3D Product Viewer</h2>
+        <p className="mt-2 text-sm text-muted sm:text-base">
+          Inspect the Luma Desk Lamp in 3D, switch material finishes, and try
+          responsive mouse or touch controls.
+        </p>
+        <Link
+          href="/viewer"
+          className="mt-4 inline-block text-sm font-medium no-underline"
+        >
+          Open product viewer
+        </Link>
+      </article>
     </PlaceholderPage>
   )
 }
