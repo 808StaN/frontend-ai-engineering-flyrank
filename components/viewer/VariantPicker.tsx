@@ -16,8 +16,8 @@ export function VariantPicker({
 }: VariantPickerProps) {
   return (
     <fieldset className="viewer-variants">
-      <legend>Finish</legend>
-      <p>Select a material finish for the desk lamp.</p>
+      <legend>Lamp color</legend>
+      <p>Choose a color for the desk lamp.</p>
       <div className="viewer-variants__options">
         {productVariants.map((variant) => {
           const inputId = `viewer-finish-${variant.id}`

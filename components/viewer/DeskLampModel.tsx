@@ -6,7 +6,7 @@ type DeskLampModelProps = {
 
 export function DeskLampModel({ variant }: DeskLampModelProps) {
   return (
-    <group>
+    <group rotation={[0, -10.45, 0]}>
       <mesh position={[0, -1.22, 0]}>
         <cylinderGeometry args={[0.98, 1.08, 0.2, 48]} />
         <meshStandardMaterial
@@ -42,7 +42,7 @@ export function DeskLampModel({ variant }: DeskLampModelProps) {
         <meshStandardMaterial color="#dbeafe" metalness={0.65} roughness={0.2} />
       </mesh>
 
-      <group position={[-0.84, 1.25, 0]} rotation={[0, 0, -0.55]}>
+      <group position={[-0.84, 1.00, 0]} rotation={[0, 0, -0.55]}>
         <mesh>
           <coneGeometry args={[0.58, 0.5, 48, 1, true]} />
           <meshStandardMaterial

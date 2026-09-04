@@ -3,16 +3,16 @@ export const PRODUCT_NAME = 'Luma Desk Lamp'
 export const productVariants = [
   {
     id: 'accent',
-    label: 'Accent',
-    description: 'Signature blue finish',
+    label: 'Blue',
+    description: 'Blue finish',
     color: '#4a9eff',
     metalness: 0.55,
     roughness: 0.28,
   },
   {
     id: 'success',
-    label: 'Success',
-    description: 'Emerald green finish',
+    label: 'Green',
+    description: 'Green finish',
     color: '#34d399',
     metalness: 0.4,
     roughness: 0.35,

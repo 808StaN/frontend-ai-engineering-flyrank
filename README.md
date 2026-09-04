@@ -137,7 +137,7 @@ Node.js 22. Playwright reports and test result artefacts are ignored by Git.
 
 The `/viewer` route renders the **Luma Desk Lamp**, an interactive 3D desk
 lamp. Drag to orbit the model, use the scroll wheel or a pinch gesture to zoom,
-choose Accent, Success, or Graphite material finishes, and use the keyboard
+choose Blue, Green, or Graphite material finishes, and use the keyboard
 accessible **Reset view** control to return to the default angle.
 
 The model is procedural geometry rather than an external GLB. It is always

@@ -24,18 +24,18 @@ describe('VariantPicker', () => {
   it('exposes material choices as an accessible radio group', () => {
     render(<VariantPickerHarness />)
 
-    expect(screen.getByRole('group', { name: 'Finish' })).toBeInTheDocument()
-    expect(screen.getByRole('radio', { name: 'Accent' })).toBeChecked()
-    expect(screen.getByRole('radio', { name: 'Success' })).not.toBeChecked()
+    expect(screen.getByRole('group', { name: 'Lamp color' })).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: 'Blue' })).toBeChecked()
+    expect(screen.getByRole('radio', { name: 'Green' })).not.toBeChecked()
   })
 
   it('updates the selected finish after keyboard or pointer input', async () => {
     const user = userEvent.setup()
     render(<VariantPickerHarness />)
 
-    await user.click(screen.getByRole('radio', { name: 'Success' }))
+    await user.click(screen.getByRole('radio', { name: 'Green' }))
 
-    expect(screen.getByRole('radio', { name: 'Success' })).toBeChecked()
-    expect(screen.getByRole('radio', { name: 'Accent' })).not.toBeChecked()
+    expect(screen.getByRole('radio', { name: 'Green' })).toBeChecked()
+    expect(screen.getByRole('radio', { name: 'Blue' })).not.toBeChecked()
   })
 })
