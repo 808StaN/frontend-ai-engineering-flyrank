@@ -56,6 +56,9 @@ export function SmartScrollArea({
       <div
         ref={scrollRef}
         className="chat-scroll-area"
+        role="region"
+        aria-label="Conversation transcript"
+        tabIndex={0}
         onScroll={handleScroll}
       >
         {children}
