@@ -92,4 +92,17 @@ describe('ChatComposer', () => {
     await user.click(stopButton)
     expect(onStop).toHaveBeenCalledOnce()
   })
+
+  it('moves focus to Stop and supports Escape while streaming', async () => {
+    const user = userEvent.setup()
+    const onStop = vi.fn()
+    render(<ComposerHarness status="submitted" onStop={onStop} />)
+
+    expect(
+      screen.getByRole('button', { name: 'Stop generating' }),
+    ).toHaveFocus()
+
+    await user.keyboard('{Escape}')
+    expect(onStop).toHaveBeenCalledOnce()
+  })
 })

@@ -9,6 +9,7 @@ import {
   DEFAULT_CAMERA_POSITION,
   MAX_CAMERA_DISTANCE,
   MIN_CAMERA_DISTANCE,
+  PRODUCT_NAME,
   type ProductVariant,
 } from '@/lib/viewer/config'
 
@@ -58,7 +59,7 @@ export function ProductViewerCanvas({
       frameloop="demand"
       gl={{ antialias: true, powerPreference: 'high-performance' }}
       role="img"
-      aria-label="Interactive 3D FlyRank Node product viewer"
+      aria-label={`Interactive 3D ${PRODUCT_NAME} viewer`}
     >
       <color attach="background" args={['#0a1020']} />
       <ambientLight intensity={1.1} />

@@ -2,7 +2,7 @@
 
 import { DefaultChatTransport } from 'ai'
 import { useChat } from '@ai-sdk/react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { ChatComposer } from '@/components/chat/ChatComposer'
 import { ChatErrorNotice } from '@/components/chat/ChatErrorNotice'
 import { MessageList } from '@/components/chat/MessageList'
@@ -39,6 +39,7 @@ const chatFetch: typeof fetch = async (...args) => {
 
 export function ChatInterface() {
   const [input, setInput] = useState('')
+  const [announcement, setAnnouncement] = useState('')
   const transport = useMemo(
     () => new DefaultChatTransport({ api: '/api/chat', fetch: chatFetch }),
     [],
@@ -58,6 +59,36 @@ export function ChatInterface() {
         part.type.startsWith('tool-'),
     )
   const isThinking = status === 'streaming' && !latestAssistantHasContent
+  const latestAssistantText =
+    latestMessage?.role === 'assistant'
+      ? latestMessage.parts
+          .filter((part) => part.type === 'text')
+          .map((part) => part.text)
+          .join('')
+          .trim()
+      : ''
+  const previousStatusRef = useRef(status)
+
+  useEffect(() => {
+    const previousStatus = previousStatusRef.current
+
+    if (status === 'submitted' && previousStatus !== 'submitted') {
+      setAnnouncement('Your message was sent. FlyRank Advisor is preparing a response.')
+    } else if (status === 'streaming' && previousStatus !== 'streaming') {
+      setAnnouncement('FlyRank Advisor is responding.')
+    } else if (
+      status === 'ready' &&
+      (previousStatus === 'submitted' || previousStatus === 'streaming')
+    ) {
+      setAnnouncement(
+        latestAssistantText
+          ? `Response complete. ${latestAssistantText.slice(0, 160)}`
+          : 'Response complete.',
+      )
+    }
+
+    previousStatusRef.current = status
+  }, [latestAssistantText, status])
 
   function sendCurrentMessage() {
     const text = input.trim()
@@ -100,8 +131,11 @@ export function ChatInterface() {
           or reviewing your frontend AI capstone.
         </p>
       </header>
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
+        {announcement}
+      </p>
 
-      <div className="chat-conversation">
+      <div className="chat-conversation" aria-busy={isGenerating}>
         <SmartScrollArea followStream={isGenerating}>
           <MessageList
             messages={messages}

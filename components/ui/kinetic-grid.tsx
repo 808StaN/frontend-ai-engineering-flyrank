@@ -21,6 +21,7 @@ const INFLUENCE_RADIUS = 260
 const MAX_WARP = 24
 const DOT_SPACING = 28
 const LERP_SPEED = 0.08
+const INTERACTION_IDLE_MS = 1_200
 
 const LINE_BASE = { r: 255, g: 255, b: 255, a: 0.13 }
 const NODE_BASE_RADIUS = 1.8
@@ -56,6 +57,8 @@ export default function KineticGrid({
   const targetMouseRef = useRef<Point>({ x: -9999, y: -9999 })
   const ripplesRef = useRef<Ripple[]>([])
   const rafRef = useRef<number>(0)
+  const lastInteractionRef = useRef<number>(Number.NEGATIVE_INFINITY)
+  const canAnimateRef = useRef(false)
   const sizeRef = useRef({ w: 0, h: 0 })
 
   const getWarpedPoint = useCallback(
@@ -321,6 +324,11 @@ export default function KineticGrid({
 
   const animate = useCallback(
     (now: number) => {
+      if (!canAnimateRef.current) {
+        rafRef.current = 0
+        return
+      }
+
       const mouse = mouseRef.current
       const targetMouse = targetMouseRef.current
 
@@ -328,6 +336,15 @@ export default function KineticGrid({
       mouse.y = lerpN(mouse.y, targetMouse.y, LERP_SPEED)
 
       draw(now)
+
+      if (
+        now - lastInteractionRef.current > INTERACTION_IDLE_MS &&
+        ripplesRef.current.length === 0
+      ) {
+        rafRef.current = 0
+        return
+      }
+
       rafRef.current = requestAnimationFrame(animate)
     },
     [draw],
@@ -335,6 +352,9 @@ export default function KineticGrid({
 
   useEffect(() => {
     const canvas = canvasRef.current
+    const reducedMotionQuery = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    )
 
     if (!canvas) {
       return
@@ -344,10 +364,36 @@ export default function KineticGrid({
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
       sizeRef.current = { w: window.innerWidth, h: window.innerHeight }
+      draw(performance.now())
+    }
+
+    const stopAnimation = () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+        rafRef.current = 0
+      }
+    }
+
+    const updateAnimationPermission = () => {
+      canAnimateRef.current = !document.hidden && !reducedMotionQuery.matches
+
+      if (!canAnimateRef.current) {
+        stopAnimation()
+      }
+    }
+
+    const startAnimation = () => {
+      if (!canAnimateRef.current || rafRef.current) {
+        return
+      }
+
+      rafRef.current = requestAnimationFrame(animate)
     }
 
     const handleMouseMove = (event: MouseEvent) => {
       targetMouseRef.current = { x: event.clientX, y: event.clientY }
+      lastInteractionRef.current = performance.now()
+      startAnimation()
     }
 
     const handleClick = (event: MouseEvent) => {
@@ -358,21 +404,27 @@ export default function KineticGrid({
         opacity: 1,
         born: performance.now(),
       })
+      lastInteractionRef.current = performance.now()
+      startAnimation()
     }
 
     setSize()
+    updateAnimationPermission()
     window.addEventListener('resize', setSize)
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('click', handleClick)
-    rafRef.current = requestAnimationFrame(animate)
+    document.addEventListener('visibilitychange', updateAnimationPermission)
+    reducedMotionQuery.addEventListener('change', updateAnimationPermission)
 
     return () => {
       window.removeEventListener('resize', setSize)
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('click', handleClick)
-      cancelAnimationFrame(rafRef.current)
+      document.removeEventListener('visibilitychange', updateAnimationPermission)
+      reducedMotionQuery.removeEventListener('change', updateAnimationPermission)
+      stopAnimation()
     }
-  }, [animate])
+  }, [animate, draw])
 
   return (
     <div

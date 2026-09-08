@@ -32,6 +32,6 @@ test('sends a message and renders the mocked assistant response', async ({
 
   await expect(page.getByText('What should I build first?')).toBeVisible()
   await expect(
-    page.getByText('Your mocked capstone answer is ready.'),
+    page.getByText('Your mocked capstone answer is ready.', { exact: true }),
   ).toBeVisible()
 })
