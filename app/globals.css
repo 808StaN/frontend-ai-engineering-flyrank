@@ -25,7 +25,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-[#04091b] text-foreground font-sans antialiased;
   }
 
   a {
@@ -60,15 +60,15 @@
 
 @layer components {
   .glass-panel {
-    @apply border border-white/10 bg-white/5 backdrop-blur-md;
+    @apply border border-white/10 bg-[#071126]/65 backdrop-blur-md;
   }
 
   .glass-card {
-    @apply rounded-lg border border-white/10 bg-white/5 shadow-lg shadow-black/20 backdrop-blur-md;
+    @apply rounded-lg border border-white/10 bg-[#071126]/65 shadow-lg shadow-black/20 backdrop-blur-md;
   }
 
   .chat-interface {
-    @apply mx-auto grid h-[calc(100dvh-6rem)] min-h-0 w-full max-w-4xl grid-rows-[auto_minmax(0,1fr)] rounded-3xl border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/30 backdrop-blur-md sm:h-[calc(100dvh-8.5rem)] sm:min-h-[32rem] sm:p-6;
+    @apply mx-auto grid h-[calc(100dvh-6rem)] min-h-0 w-full max-w-4xl grid-rows-[auto_minmax(0,1fr)] rounded-3xl border border-white/10 bg-[#071126]/65 p-4 shadow-2xl shadow-black/30 backdrop-blur-md sm:h-[calc(100dvh-8.5rem)] sm:min-h-[32rem] sm:p-6;
   }
 
   .chat-interface__header {
@@ -112,7 +112,7 @@
   }
 
   .chat-message--assistant .chat-message__bubble {
-    @apply border border-border bg-surface-muted text-foreground;
+    @apply border border-accent/20 bg-[#071126] text-foreground;
   }
 
   .chat-message__role {
@@ -132,7 +132,7 @@
   }
 
   .chat-response-skeleton {
-    @apply mt-4 w-full max-w-sm space-y-2 rounded-lg border border-border bg-surface-muted p-4;
+    @apply mt-4 w-full max-w-sm space-y-2 rounded-lg border border-accent/20 bg-[#071126] p-4;
   }
 
   .chat-response-skeleton span:not(.sr-only) {
@@ -152,7 +152,7 @@
   }
 
   .chat-thinking {
-    @apply mt-4 inline-flex items-center gap-2 rounded-full bg-surface-muted px-3 py-2 text-sm text-muted;
+    @apply mt-4 inline-flex items-center gap-2 rounded-full bg-[#071126] px-3 py-2 text-sm text-muted;
   }
 
   .chat-thinking__dots {
@@ -296,7 +296,7 @@
   }
 
   .chat-page-shell .chat-message--assistant .chat-message__bubble {
-    @apply border-white/10 bg-white/5;
+    @apply border-accent/20 bg-[#071126];
   }
 
   .chat-page-shell .chat-composer__textarea:focus {
@@ -417,7 +417,7 @@
   }
 
   .viewer-shell {
-    @apply grid gap-4 rounded-3xl border border-white/10 bg-white/5 p-3 shadow-2xl shadow-black/20 backdrop-blur-md lg:grid-cols-[minmax(0,1fr)_20rem] lg:p-5;
+    @apply grid gap-4 rounded-3xl border border-white/10 bg-[#071126]/65 p-3 shadow-2xl shadow-black/20 backdrop-blur-md lg:grid-cols-[minmax(0,1fr)_20rem] lg:p-5;
   }
 
   .viewer-stage {
@@ -442,7 +442,7 @@
   }
 
   .viewer-panel {
-    @apply flex flex-col rounded-2xl border border-white/10 bg-black/10 p-5;
+    @apply flex flex-col rounded-2xl border border-white/10 bg-[#071126]/65 p-5;
   }
 
   .viewer-panel__eyebrow {
@@ -509,6 +509,72 @@
   .viewer-status {
     @apply mt-auto pt-6;
   }
+
+  .shader-hero {
+    @apply relative -my-6 flex min-h-[calc(100dvh-4rem)] items-center overflow-hidden px-4 py-20 sm:-my-8 sm:min-h-[calc(100dvh-5rem)] sm:px-6 lg:px-8;
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+  }
+
+  .shader-app-background {
+    @apply fixed inset-0 z-0 overflow-hidden bg-[#04091b];
+  }
+
+  .shader-hero__canvas,
+  .shader-hero__fallback {
+    @apply absolute inset-0 size-full;
+  }
+
+  .shader-hero__fallback {
+    display: none;
+    background:
+      radial-gradient(circle at 50% 50%, rgb(74 158 255 / 0.18), transparent 34%),
+      linear-gradient(rgb(74 158 255 / 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(74 158 255 / 0.12) 1px, transparent 1px),
+      #04091b;
+    background-size:
+      auto,
+      3.5rem 3.5rem,
+      3.5rem 3.5rem,
+      auto;
+  }
+
+  .shader-hero__content {
+    @apply relative z-10 mx-auto flex w-full justify-center;
+  }
+
+  .shader-hero__panel {
+    @apply max-w-3xl rounded-3xl border border-white/15 bg-[#071126]/65 p-6 text-center shadow-2xl shadow-black/40 backdrop-blur-md sm:p-10;
+  }
+
+  .shader-hero__eyebrow {
+    @apply m-0 text-sm font-semibold uppercase tracking-[0.2em] text-accent;
+  }
+
+  .shader-hero h1 {
+    @apply mt-4 max-w-2xl text-4xl font-semibold tracking-tight text-foreground sm:text-6xl;
+  }
+
+  .shader-hero__description {
+    @apply mx-auto mt-5 max-w-xl text-base leading-7 text-slate-200 sm:text-lg;
+  }
+
+  .shader-hero__actions {
+    @apply mt-8 flex flex-col justify-center gap-3 sm:flex-row;
+  }
+
+  .shader-hero__primary-action,
+  .shader-hero__secondary-action {
+    @apply rounded-full px-5 py-3 text-center text-sm font-semibold no-underline transition-colors;
+  }
+
+  .shader-hero__primary-action {
+    @apply bg-accent text-accent-foreground hover:bg-[#77b8ff];
+  }
+
+  .shader-hero__secondary-action {
+    @apply border border-accent/50 bg-accent/10 text-accent hover:bg-accent/20;
+  }
 }
 
 @keyframes chat-pulse {
@@ -544,6 +610,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .shader-hero__canvas {
+    display: none;
+  }
+
+  .shader-hero__fallback {
+    display: block;
+  }
+
   .chat-thinking__dots i,
   .motion-send-button,
   .motion-send-button__label,
