@@ -13,7 +13,7 @@ export function MobileNavToggle() {
     <div className="md:hidden">
       <button
         type="button"
-        className="rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-foreground backdrop-blur-md hover:bg-white/10"
+        className="rounded-md border border-white/10 bg-[#071126]/65 px-3 py-2 text-sm font-medium text-foreground backdrop-blur-md hover:bg-accent/10"
         aria-expanded={open}
         aria-controls="mobile-navigation"
         onClick={() => setOpen((current) => !current)}
