@@ -7,6 +7,7 @@ const MAX_PIXEL_RATIO = 1.5
 const vertexShaderSource = `
   attribute vec2 a_position;
 
+  // Pass each full-screen triangle vertex directly into clip space.
   void main() {
     gl_Position = vec4(a_position, 0.0, 1.0);
   }
@@ -15,18 +16,21 @@ const vertexShaderSource = `
 const fragmentShaderSource = `
   precision highp float;
 
+  // Frame data controls movement, sizing, cursor pull, and click ripples.
   uniform float u_time;
   uniform vec2 u_resolution;
   uniform vec2 u_mouse;
   uniform vec2 u_click;
   uniform float u_click_time;
 
+  // Turn repeated cell coordinates into thin, softly edged grid lines.
   float gridLine(float coordinate, float width) {
     float line = abs(fract(coordinate) - 0.5);
     return 1.0 - smoothstep(width, width + 0.018, line);
   }
 
   void main() {
+    // Normalize pixels and correct the horizontal axis for any screen shape.
     vec2 uv = gl_FragCoord.xy / u_resolution.xy;
     float aspectRatio = u_resolution.x / u_resolution.y;
     vec2 point = uv * vec2(aspectRatio, 1.0);
@@ -36,9 +40,10 @@ const fragmentShaderSource = `
     float distanceToMouse = length(direction);
     float influence = 1.0 - smoothstep(0.0, 0.34, distanceToMouse);
 
-    // Bend cells towards the pointer without folding lines into closed loops.
+    // Bend nearby cells towards the pointer without folding them into loops.
     point -= direction * influence * 0.14;
 
+    // Repeat the coordinates to form the lattice, then add bright cell nodes.
     vec2 cells = point * 11.0;
     float horizontal = gridLine(cells.y, 0.014);
     float vertical = gridLine(cells.x, 0.014);
@@ -46,6 +51,8 @@ const fragmentShaderSource = `
 
     vec2 cell = fract(cells) - 0.5;
     float node = 1.0 - smoothstep(0.025, 0.06, length(cell));
+
+    // Expand and fade one blue ring from the most recent pointer click.
     float clickAge = max(0.0, (u_time - u_click_time) * 0.001);
     float clickDistance = length(point - click);
     float clickRing = 1.0 - smoothstep(0.0, 0.026, abs(clickDistance - clickAge * 0.62));
@@ -56,6 +63,7 @@ const fragmentShaderSource = `
       clickInfluence
     );
 
+    // Mix the dark FlyRank base, interactive blue highlights, and vignette.
     vec3 background = vec3(0.015, 0.025, 0.075);
     vec3 lines = mix(vec3(0.17, 0.25, 0.42), vec3(0.29, 0.62, 1.0), active);
     vec3 nodes = mix(vec3(0.42, 0.52, 0.7), vec3(0.42, 0.76, 1.0), active);
@@ -294,7 +302,7 @@ export function FullscreenShaderHero() {
       <div
         className="shader-hero__fallback"
         role="img"
-        aria-label="Static FlyRank aurora background"
+        aria-label="Static FlyRank grid background"
       />
     )
   }
