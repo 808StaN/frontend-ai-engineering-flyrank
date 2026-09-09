@@ -135,11 +135,12 @@ Node.js 22. Playwright reports and test result artefacts are ignored by Git.
 
 ## Fullscreen shader hero
 
-The dashboard (`/`) uses an original WebGL fullscreen shader as its hero
-background. The vertex shader expands a pair of screen-filling triangles,
-while the fragment shader recreates the visual language of the existing
-KineticGrid with a dark-blue lattice, bright nodes, pointer-driven deformation,
-and an expanding blue ripple after each click.
+The application uses an original WebGL fullscreen shader as its background;
+the dashboard (`/`) places its hero content over that canvas. The vertex shader
+expands a pair of screen-filling triangles, while the fragment shader recreates
+the visual language of the previous KineticGrid with a dark-blue lattice,
+bright nodes, pointer-driven deformation, and an expanding blue ripple after
+each click.
 
 The shader receives `u_time` for gradual movement, `u_resolution` to preserve
 the effect's aspect ratio, and `u_mouse` for pointer influence. Its render

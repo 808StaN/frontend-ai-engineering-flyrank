@@ -1,10 +1,8 @@
 import Link from 'next/link'
-import { FullscreenShaderHero } from '@/components/shader/FullscreenShaderHero'
 
 export default function DashboardPage() {
   return (
     <section className="shader-hero" aria-labelledby="dashboard-title">
-      <FullscreenShaderHero />
       <div className="shader-hero__content">
         <div className="shader-hero__panel">
           <p className="shader-hero__eyebrow">Frontend AI Engineering</p>

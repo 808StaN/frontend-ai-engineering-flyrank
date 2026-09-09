@@ -270,7 +270,7 @@ export function FullscreenShaderHero() {
     }
 
     resize()
-    start()
+    render(performance.now())
     window.addEventListener('resize', resize)
     window.addEventListener('pointermove', handlePointerMove, { passive: true })
     window.addEventListener('click', handleClick, { passive: true })
