@@ -509,6 +509,68 @@
   .viewer-status {
     @apply mt-auto pt-6;
   }
+
+  .shader-hero {
+    @apply relative -my-6 flex min-h-[calc(100dvh-4rem)] items-center overflow-hidden px-4 py-20 sm:-my-8 sm:min-h-[calc(100dvh-5rem)] sm:px-6 lg:px-8;
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+  }
+
+  .shader-hero__canvas,
+  .shader-hero__fallback {
+    @apply absolute inset-0 size-full;
+  }
+
+  .shader-hero__fallback {
+    display: none;
+    background:
+      radial-gradient(circle at 50% 50%, rgb(74 158 255 / 0.18), transparent 34%),
+      linear-gradient(rgb(74 158 255 / 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(74 158 255 / 0.12) 1px, transparent 1px),
+      #04091b;
+    background-size:
+      auto,
+      3.5rem 3.5rem,
+      3.5rem 3.5rem,
+      auto;
+  }
+
+  .shader-hero__content {
+    @apply relative z-10 mx-auto w-full max-w-5xl;
+  }
+
+  .shader-hero__panel {
+    @apply max-w-3xl rounded-3xl border border-white/15 bg-[#071126]/65 p-6 shadow-2xl shadow-black/40 backdrop-blur-md sm:p-10;
+  }
+
+  .shader-hero__eyebrow {
+    @apply m-0 text-sm font-semibold uppercase tracking-[0.2em] text-accent;
+  }
+
+  .shader-hero h1 {
+    @apply mt-4 max-w-2xl text-4xl font-semibold tracking-tight text-foreground sm:text-6xl;
+  }
+
+  .shader-hero__description {
+    @apply mt-5 max-w-xl text-base leading-7 text-slate-200 sm:text-lg;
+  }
+
+  .shader-hero__actions {
+    @apply mt-8 flex flex-col gap-3 sm:flex-row;
+  }
+
+  .shader-hero__primary-action,
+  .shader-hero__secondary-action {
+    @apply rounded-full px-5 py-3 text-center text-sm font-semibold no-underline transition-colors;
+  }
+
+  .shader-hero__primary-action {
+    @apply bg-accent text-accent-foreground hover:bg-[#77b8ff];
+  }
+
+  .shader-hero__secondary-action {
+    @apply border border-white/25 bg-white/10 text-foreground hover:bg-white/20;
+  }
 }
 
 @keyframes chat-pulse {
@@ -544,6 +606,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .shader-hero__canvas {
+    display: none;
+  }
+
+  .shader-hero__fallback {
+    display: block;
+  }
+
   .chat-thinking__dots i,
   .motion-send-button,
   .motion-send-button__label,

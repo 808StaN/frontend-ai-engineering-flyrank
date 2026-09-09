@@ -133,6 +133,21 @@ npm run test:e2e
 GitHub Actions repeats the same checks on every push and pull request using
 Node.js 22. Playwright reports and test result artefacts are ignored by Git.
 
+## Fullscreen shader hero
+
+The dashboard (`/`) uses an original WebGL fullscreen shader as its hero
+background. The vertex shader expands a pair of screen-filling triangles,
+while the fragment shader recreates the visual language of the existing
+KineticGrid with a dark-blue lattice, bright nodes, pointer-driven deformation,
+and an expanding blue ripple after each click.
+
+The shader receives `u_time` for gradual movement, `u_resolution` to preserve
+the effect's aspect ratio, and `u_mouse` for pointer influence. Its render
+resolution is capped at a device pixel ratio of 1.5, and its animation loop
+stops when the browser tab is hidden. Users with `prefers-reduced-motion:
+reduce` receive a static CSS grid instead, so the hero remains legible
+without continuous motion.
+
 ## 3D product viewer
 
 The `/viewer` route renders the **Luma Desk Lamp**, an interactive 3D desk
