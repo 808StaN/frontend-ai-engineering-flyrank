@@ -19,6 +19,7 @@ This project explores AI-assisted frontend development workflows using modern to
 - **Framework:** Next.js 15 (App Router) + React 19 + TypeScript
 - **Styling:** Tailwind CSS v4 with design tokens in `app/globals.css`
 - **AI streaming:** Vercel AI SDK + OpenRouter Free Router
+- **Abuse protection:** Upstash Redis + sliding-window rate limiting
 - **Deployment:** Vercel preview deployments on every push
 - **Version control:** Git + GitHub
 - **IDE:** Cursor with project rules in `.cursor/rules/`
@@ -29,7 +30,7 @@ This project explores AI-assisted frontend development workflows using modern to
 ```bash
 git clone https://github.com/808StaN/frontend-ai-engineering-flyrank.git
 cd frontend-ai-engineering-flyrank
-npm install
+npm ci
 cp .env.example .env.local
 npm run dev
 ```
@@ -60,19 +61,26 @@ Open [http://localhost:3000](http://localhost:3000).
 | `/health` | Health-check (server fetch) |
 | `/viewer` | Interactive 3D desk-lamp product viewer |
 
+The dashboard introduces the project, `/chat` provides the streaming AI
+workflow, `/motion` demonstrates button-state feedback, and `/viewer` is a
+standalone interactive 3D product experience.
+
 ## Environment Variables
 
-Copy `.env.example` to `.env.local` for local development:
+Copy `.env.example` to `.env.local` for local development, then provide values
+for all required server-side services:
 
-```bash
-HEALTH_CHECK_API_URL=https://jsonplaceholder.typicode.com/posts/1
-OPENROUTER_API_KEY=your_openrouter_server_key
-```
+| Variable | Required | Used by | Purpose |
+| --- | --- | --- | --- |
+| `HEALTH_CHECK_API_URL` | Yes | `/health` | Public endpoint displayed by the health-check screen |
+| `OPENROUTER_API_KEY` | Yes | `/api/chat` | Server-only key for OpenRouter streamed AI responses |
+| `UPSTASH_REDIS_REST_URL` | Yes in production | `/api/chat` | Upstash REST endpoint for distributed rate limiting |
+| `UPSTASH_REDIS_REST_TOKEN` | Yes in production | `/api/chat` | Server-only Upstash credential |
 
-`OPENROUTER_API_KEY` is server-side only and must never use a `NEXT_PUBLIC_`
-prefix. Create it in the [OpenRouter keys dashboard](https://openrouter.ai/keys),
-add it to `.env.local`, and set it in Vercel for preview and production
-deployments. Never commit secrets to the repository.
+All secrets are server-side only and must never use a `NEXT_PUBLIC_` prefix.
+Create the AI key in the [OpenRouter keys dashboard](https://openrouter.ai/keys)
+and create a Redis database in the [Upstash console](https://console.upstash.com/).
+Never commit `.env.local` or secret values.
 
 ## Streaming AI chat
 
@@ -111,6 +119,36 @@ For local manual verification, send one of these explicit test messages:
 - `[[simulate:mid-stream-error]]` — renders partial assistant text, then a
   designed interrupted-stream error.
 
+### Production request limits
+
+`/api/chat` uses an Upstash Redis sliding-window limiter of 10 requests per
+minute for each forwarded client IP. The limit is shared across Vercel
+instances, unlike an in-memory counter, and rejected calls return `429` with a
+`Retry-After` header. The route also rejects requests with more than 20
+messages, more than 12,000 characters of text history, a latest message over
+2,000 characters, or a serialized request larger than 64 KB. Streaming is
+bounded to 30 seconds and the model is limited to 700 output tokens.
+
+## Architecture and decisions
+
+```mermaid
+flowchart LR
+  Browser[React client] -->|UI messages| ChatRoute[Next.js /api/chat]
+  ChatRoute -->|rate limit| Upstash[Upstash Redis]
+  ChatRoute -->|stream text| OpenRouter[OpenRouter AI]
+  OpenRouter -->|message stream| Browser
+```
+
+- The App Router keeps pages server-rendered by default while interactive
+  surfaces, including chat and the shader, are isolated in client components.
+- The AI provider, model ID, system prompt, and output limit live in
+  `lib/ai/config.ts`, keeping credentials out of browser bundles.
+- Upstash was selected because Vercel serverless instances cannot share an
+  in-memory request counter. Route input caps and `maxDuration` provide
+  additional cost and runtime bounds.
+- The product viewer lazy-loads its Three.js canvas, while the fullscreen
+  shader caps pixel density and respects reduced-motion preferences.
+
 ## Testing
 
 The test suite covers the chat's accessible composer, streamed capstone-review
@@ -132,6 +170,16 @@ npm run test:e2e
 
 GitHub Actions repeats the same checks on every push and pull request using
 Node.js 22. Playwright reports and test result artefacts are ignored by Git.
+
+## How AI tools built this
+
+Cursor was used as an AI-assisted implementation partner for planning,
+scaffolding components, and iterating on the chat, accessibility, 3D viewer,
+and shader tasks. Each generated change was reviewed in the repository, tested
+with linting, Vitest, production builds, and Playwright, then refined through
+manual browser checks. Provider keys, deployment settings, and final merge
+decisions remain human-controlled; AI tooling never receives or commits secret
+values.
 
 ## Fullscreen shader hero
 
@@ -187,10 +235,21 @@ labels and colors while disabling animation.
 
 ## Deployment (Vercel)
 
-1. Import the GitHub repository in [Vercel](https://vercel.com/).
-2. Framework preset: **Next.js**
-3. Add `HEALTH_CHECK_API_URL` and `OPENROUTER_API_KEY` in Project Settings → Environment Variables
-4. Every push creates a preview deployment; merges to `main` update production
+1. Import the GitHub repository in [Vercel](https://vercel.com/) with the
+   **Next.js** framework preset.
+2. In Project Settings → Environment Variables, add all four variables from
+   the environment table above to **Production**. Add them to Preview too when
+   the chat must work on PR deployments.
+3. In Deployment Protection, allow public access to the Production deployment.
+   A reviewer must be able to open the URL without a Vercel account.
+4. Merge `main` and use the Production deployment URL shown by Vercel. Every
+   branch push still creates a Preview deployment for review before release.
+5. Test the public URL in Chrome, Firefox, Safari, and on a mobile device:
+   open the chat, send a message, confirm the streamed response, and open the
+   mobile navigation menu.
+
+No custom domain is required; Vercel's production URL is the canonical public
+deployment address for this repository.
 
 ## Project Structure
 

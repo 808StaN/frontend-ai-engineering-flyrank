@@ -16,6 +16,7 @@ import {
   chatGenerationConfig,
   getCapstoneChatModel,
 } from '@/lib/ai/config'
+import { limitChatRequests } from '@/lib/ai/rate-limit'
 
 type ChatRequestBody = {
   messages: UIMessage[]
@@ -23,16 +24,37 @@ type ChatRequestBody = {
 
 type ChatTestScenario = 'rate-limit' | 'route-error' | 'mid-stream-error'
 
-const RATE_LIMIT_WINDOW_MS = 60_000
-const RATE_LIMIT_MAX_REQUESTS = 12
-const requestTimestampsByClient = new Map<string, number[]>()
+export const maxDuration = 30
+
+const MAX_MESSAGES_PER_REQUEST = 20
+const MAX_LATEST_USER_MESSAGE_LENGTH = 2_000
+const MAX_TOTAL_TEXT_LENGTH = 12_000
+const MAX_REQUEST_BYTES = 64_000
 
 function isChatRequestBody(value: unknown): value is ChatRequestBody {
   if (typeof value !== 'object' || value === null || !('messages' in value)) {
     return false
   }
 
-  return Array.isArray(value.messages)
+  return (
+    Array.isArray(value.messages) &&
+    value.messages.every(
+      (message) =>
+        typeof message === 'object' &&
+        message !== null &&
+        'role' in message &&
+        'parts' in message &&
+        Array.isArray(message.parts),
+    )
+  )
+}
+
+function getMessageText(message: UIMessage) {
+  return message.parts
+    .filter((part) => part.type === 'text')
+    .map((part) => part.text)
+    .join(' ')
+    .trim()
 }
 
 function getLatestUserText(messages: UIMessage[]) {
@@ -40,13 +62,34 @@ function getLatestUserText(messages: UIMessage[]) {
     .reverse()
     .find((message) => message.role === 'user')
 
-  return (
-    latestUserMessage?.parts
-      .filter((part) => part.type === 'text')
-      .map((part) => part.text)
-      .join(' ')
-      .trim() ?? ''
+  return latestUserMessage ? getMessageText(latestUserMessage) : ''
+}
+
+function validateChatRequest(messages: UIMessage[]) {
+  if (messages.length > MAX_MESSAGES_PER_REQUEST) {
+    return `A chat request can contain at most ${MAX_MESSAGES_PER_REQUEST} messages.`
+  }
+
+  const totalTextLength = messages.reduce(
+    (total, message) => total + getMessageText(message).length,
+    0,
   )
+
+  if (totalTextLength > MAX_TOTAL_TEXT_LENGTH) {
+    return `The chat history cannot exceed ${MAX_TOTAL_TEXT_LENGTH} characters.`
+  }
+
+  const latestUserText = getLatestUserText(messages)
+
+  if (latestUserText.length > MAX_LATEST_USER_MESSAGE_LENGTH) {
+    return `A message cannot exceed ${MAX_LATEST_USER_MESSAGE_LENGTH} characters.`
+  }
+
+  if (new TextEncoder().encode(JSON.stringify(messages)).length > MAX_REQUEST_BYTES) {
+    return 'The chat request is too large.'
+  }
+
+  return null
 }
 
 function shouldRequireCapstoneReviewTool(messages: UIMessage[]) {
@@ -78,30 +121,11 @@ function getChatTestScenario(messages: UIMessage[]): ChatTestScenario | null {
 }
 
 function getClientIdentifier(request: Request) {
-  return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'local'
-}
-
-function isRateLimited(request: Request) {
-  const client = getClientIdentifier(request)
-  const now = Date.now()
-  const recentRequests = (requestTimestampsByClient.get(client) ?? []).filter(
-    (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS,
+  return (
+    request.headers.get('x-vercel-forwarded-for') ??
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    'local'
   )
-
-  if (recentRequests.length >= RATE_LIMIT_MAX_REQUESTS) {
-    const retryAfterSeconds = Math.ceil(
-      (RATE_LIMIT_WINDOW_MS - (now - recentRequests[0])) / 1000,
-    )
-
-    requestTimestampsByClient.set(client, recentRequests)
-
-    return retryAfterSeconds
-  }
-
-  recentRequests.push(now)
-  requestTimestampsByClient.set(client, recentRequests)
-
-  return null
 }
 
 function createMidStreamErrorResponse(messages: UIMessage[]) {
@@ -138,6 +162,12 @@ export async function POST(request: Request) {
       )
     }
 
+    const requestError = validateChatRequest(body.messages)
+
+    if (requestError) {
+      return Response.json({ error: requestError }, { status: 400 })
+    }
+
     const latestUserText = getLatestUserText(body.messages)
     if (!latestUserText) {
       return Response.json(
@@ -171,8 +201,8 @@ export async function POST(request: Request) {
       return createMidStreamErrorResponse(body.messages)
     }
 
-    const retryAfterSeconds = isRateLimited(request)
-    if (retryAfterSeconds !== null) {
+    const rateLimit = await limitChatRequests(getClientIdentifier(request))
+    if (!rateLimit.allowed) {
       return Response.json(
         {
           error:
@@ -180,7 +210,7 @@ export async function POST(request: Request) {
         },
         {
           status: 429,
-          headers: { 'Retry-After': retryAfterSeconds.toString() },
+          headers: { 'Retry-After': rateLimit.retryAfterSeconds.toString() },
         },
       )
     }
